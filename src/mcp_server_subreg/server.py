@@ -213,19 +213,19 @@ def add_dns_record(
 ) -> Any:
     """Add a DNS record to a zone hosted on Subreg DNS. Requires SUBREG_READONLY=false."""
     _require_writable()
-    params: dict[str, Any] = {"domain": domain, "name": name, "type": type, "content": content}
+    record: dict[str, Any] = {"name": name, "type": type, "content": content}
     if ttl is not None:
-        params["ttl"] = ttl
+        record["ttl"] = ttl
     if prio is not None:
-        params["prio"] = prio
-    return _call(_get_client().add_dns_record, params)
+        record["prio"] = prio
+    return _call(_get_client().add_dns_record, {"domain": domain, "record": record})
 
 
 @mcp.tool
 def delete_dns_record(domain: str, record_id: str) -> Any:
     """Delete a DNS record from a zone by its record id. Requires SUBREG_READONLY=false."""
     _require_writable()
-    return _call(_get_client().delete_dns_record, {"domain": domain, "id": record_id})
+    return _call(_get_client().delete_dns_record, {"domain": domain, "record": {"id": record_id}})
 
 
 @mcp.tool
