@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="console-application">
+  <id>io.github.spojenet.mcp-server-subreg</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>mcp-server-subreg</name>
+  <summary>MCP server for the Subreg.cz domain registrar</summary>
+  <description>
+    <p>
+      An MCP (Model Context Protocol) server exposing the Subreg.cz domain
+      registrar SOAP API as tools for an LLM agent, built on fastmcp and
+      python3-subreg-client.
+    </p>
+    <p>
+      Tools cover domain availability/info/listing, pricelists, account
+      credit, DNS zone lookups, contacts, and order status, read-only by
+      default, plus domain registration/renewal/deletion, DNS record
+      writes, contact writes, and credit adjustments, gated behind
+      SUBREG_READONLY=false. Login credentials are read once from the
+      environment at startup and are never tool parameters.
+    </p>
+  </description>
+  <url type="homepage">https://github.com/VitexSoftware/mcp-server-subreg</url>
+  <icon type="stock">utilities-terminal</icon>
+  <provides>
+    <binary>mcp-server-subreg</binary>
+  </provides>
+</component>

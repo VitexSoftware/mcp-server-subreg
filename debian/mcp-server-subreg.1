@@ -1,0 +1,103 @@
+.TH MCP-SERVER-SUBREG 1 "August 2026" "mcp-server-subreg" "User Commands"
+.SH NAME
+mcp-server-subreg \- MCP server exposing the Subreg.cz domain registrar API
+.SH SYNOPSIS
+.B mcp-server-subreg
+.SH DESCRIPTION
+.B mcp-server-subreg
+is a Model Context Protocol (MCP) server that exposes the Subreg.cz
+domain registrar SOAP API as tools for an LLM agent.
+It communicates over stdio using the MCP protocol and is intended to be
+launched by an MCP client (e.g. Claude Code, Claude Desktop, or any other
+MCP-compatible agent runtime), not run interactively.
+.PP
+It is built on
+.B fastmcp
+and
+.BR python3-subreg-client (7).
+.SH TOOLS
+.SS Read-only
+.TP
+.B check_domain(domain)
+Check domain availability.
+.TP
+.B info_domain(domain)
+Fetch registration details for a domain.
+.TP
+.B domains_list()
+List domains held under the account.
+.TP
+.B pricelist()
+Fetch the full TLD pricelist.
+.TP
+.B get_pricelist(pricelist)
+Fetch a named pricelist.
+.TP
+.B get_credit()
+Fetch the account credit balance.
+.TP
+.B info_user(user_id=None)
+Fetch info about the authenticated or a specific sub-user.
+.TP
+.B get_dns_zone(domain)
+Fetch DNS zone records for a domain.
+.TP
+.B info_contact(contact_id)
+Fetch details for a contact object.
+.TP
+.B contacts_list()
+List contact objects.
+.TP
+.B info_order(order_id)
+Fetch the status of a submitted order.
+.TP
+.B get_tld_info(tld)
+Fetch registration rules for a TLD.
+.SS Mutating (require SUBREG_READONLY=false)
+.TP
+.B register_domain(domain, registrant_id, contacts_admin_id, contacts_tech_id, auth_id, ns_hosts=None, nsset=None, period=1)
+Register a new domain.
+.TP
+.B renew_domain(domain, years=1)
+Renew an existing domain.
+.TP
+.B delete_domain(domain)
+Delete a domain registration.
+.TP
+.B add_dns_record(domain, name, type, content, ttl=None, prio=None)
+Add a DNS record to a zone.
+.TP
+.B delete_dns_record(domain, record_id)
+Delete a DNS record from a zone.
+.TP
+.B create_contact(params)
+Create a new contact object.
+.TP
+.B update_contact(contact_id, params)
+Update an existing contact object.
+.TP
+.B credit_correction(username, amount, reason)
+Adjust a sub-user's credit balance.
+.SH ENVIRONMENT
+.TP
+.B SUBREG_LOCATION
+SOAP endpoint URL, e.g. https://soap.subreg.cz/cmd.php. Required.
+.TP
+.B SUBREG_URI
+SOAP namespace URI, e.g. https://soap.subreg.cz/soap. Required.
+.TP
+.B SUBREG_LOGIN
+Subreg account login. Required.
+.TP
+.B SUBREG_PASSWORD
+Subreg account password. Required.
+.TP
+.B SUBREG_READONLY
+When unset or true (the default), mutating tools raise instead of
+executing. Set to false to allow domain/DNS/contact/billing writes.
+.SH SEE ALSO
+.BR python3-subreg-client (7)
+.br
+Project homepage: https://github.com/VitexSoftware/mcp-server-subreg
+.SH AUTHOR
+Vítězslav Dvořák <info@vitexsoftware.cz>

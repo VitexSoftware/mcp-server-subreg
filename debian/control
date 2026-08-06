@@ -1,0 +1,40 @@
+Source: mcp-server-subreg
+Section: python
+Priority: optional
+Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
+Build-Depends:
+ appstream,
+ debhelper-compat (= 13),
+ dh-python,
+ pybuild-plugin-pyproject,
+ python3-all,
+ python3-build,
+ python3-fastmcp,
+ python3-setuptools,
+ python3-subreg-client,
+ python3-wheel,
+Standards-Version: 4.7.0
+Homepage: https://github.com/VitexSoftware/mcp-server-subreg
+Vcs-Git: https://github.com/VitexSoftware/mcp-server-subreg.git
+Vcs-Browser: https://github.com/VitexSoftware/mcp-server-subreg
+Rules-Requires-Root: no
+
+Package: mcp-server-subreg
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ python3-fastmcp,
+ python3-subreg-client (>= 1.0.0),
+ ${misc:Depends},
+ ${python3:Depends},
+Description: MCP server for the Subreg.cz domain registrar
+ An MCP (Model Context Protocol) server exposing the Subreg.cz domain
+ registrar SOAP API as tools for an LLM agent, built on fastmcp and
+ python3-subreg-client.
+ .
+ Tools cover domain availability/info/listing, pricelists, account
+ credit, DNS zone lookups, contacts, and order status (all read-only
+ by default), plus domain registration/renewal/deletion, DNS record
+ writes, contact writes, and credit adjustments, gated behind
+ SUBREG_READONLY=false. Login credentials are read once from the
+ environment at startup and are never tool parameters.

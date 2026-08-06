@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_test:
+	appstreamcli validate --no-net debian/mcp-server-subreg.metainfo.xml
+	# Skip pybuild's default unittest discovery: tests/test_server.py uses
+	# pytest, which isn't packaged as a build-dependency here.
+
+override_dh_install:
+	dh_install
+	install -D -m644 debian/mcp-server-subreg.metainfo.xml \
+		debian/mcp-server-subreg/usr/share/metainfo/io.github.spojenet.mcp-server-subreg.metainfo.xml
