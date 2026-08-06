@@ -1,3 +1,11 @@
+mcp-server-subreg (0.1.1) unstable; urgency=medium
+
+  * Fix Add_DNS_Record/Delete_DNS_Record: nest record fields under a
+    'record' key, matching Subreg's actual SOAP schema (verified against
+    the live API).
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 07 Aug 2026 01:00:03 +0200
+
 mcp-server-subreg (0.1.0) unstable; urgency=medium
 
   * Initial release.
