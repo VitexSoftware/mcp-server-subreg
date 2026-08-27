@@ -38,3 +38,14 @@ Description: MCP server for the Subreg.cz domain registrar
  writes, contact writes, and credit adjustments, gated behind
  SUBREG_READONLY=false. Login credentials are read once from the
  environment at startup and are never tool parameters.
+
+Package: mcprack-mcp-server-subreg
+Architecture: all
+Depends:
+ ${misc:Depends},
+ mcprack (>= 1.5.1),
+ mcp-server-subreg (= ${binary:Version}),
+Description: Registers Subreg.cz MCP server into mcprack catalog
+ Companion package for mcp-server-subreg. Installing it registers
+ the mcp-server-subreg binary as an available MCP server in the
+ local mcprack instance; removing it unregisters it again.
