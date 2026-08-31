@@ -1,5 +1,9 @@
 # mcp-server-subreg
 
+![mcp-server-subreg](mcp-server-subreg.svg)
+
+[![M8ven Verified](https://m8ven.ai/api/agent-verify/badge?score=73)](https://m8ven.ai/verified/verify?id=2004833ab8634413)
+
 MCP server exposing the [Subreg.cz](https://subreg.cz) domain registrar SOAP
 API — via the [`subreg-client`](https://github.com/Spoje-NET/python3-subreg-client)
 library — as tools for LLM agents built with [FastMCP](https://gofastmcp.com).

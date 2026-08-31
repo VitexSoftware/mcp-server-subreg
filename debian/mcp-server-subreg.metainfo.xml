@@ -21,7 +21,7 @@
     </p>
   </description>
   <url type="homepage">https://github.com/VitexSoftware/mcp-server-subreg</url>
-  <icon type="stock">utilities-terminal</icon>
+  <icon type="stock">mcp-server-subreg</icon>
   <provides>
     <binary>mcp-server-subreg</binary>
   </provides>
