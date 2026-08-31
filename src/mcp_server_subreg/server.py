@@ -17,6 +17,7 @@ from functools import lru_cache
 from typing import Any
 
 from fastmcp import FastMCP
+from mcp.types import ToolAnnotations
 from subreg import Commands, Orders, SubregError
 
 mcp = FastMCP("Subreg")
@@ -68,6 +69,20 @@ def _get_client() -> _SubregClient:
     )
 
 
+_READ_ONLY = ToolAnnotations(
+    read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=True
+)
+_MUTATING = ToolAnnotations(
+    read_only_hint=False, destructive_hint=False, idempotent_hint=False, open_world_hint=True
+)
+_MUTATING_IDEMPOTENT = ToolAnnotations(
+    read_only_hint=False, destructive_hint=False, idempotent_hint=True, open_world_hint=True
+)
+_DESTRUCTIVE = ToolAnnotations(
+    read_only_hint=False, destructive_hint=True, idempotent_hint=True, open_world_hint=True
+)
+
+
 def _call(fn, *args: Any, **kwargs: Any) -> Any:
     try:
         return fn(*args, **kwargs)
@@ -80,74 +95,74 @@ def _call(fn, *args: Any, **kwargs: Any) -> Any:
 # --------------------------------------------------------------------------
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def check_domain(domain: str) -> Any:
     """Check whether a domain is available for registration."""
     return _call(_get_client().check_domain, {"domain": domain})
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def info_domain(domain: str) -> Any:
     """Fetch registration details (status, expiration, nameservers, ...) for a domain."""
     return _call(_get_client().info_domain, {"domain": domain})
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def domains_list() -> Any:
     """List all domains held under the authenticated Subreg account."""
     return _call(_get_client().domains_list)
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def pricelist() -> Any:
     """Fetch the full TLD pricelist for the authenticated account."""
     return _call(_get_client().pricelist)
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def get_pricelist(pricelist: str) -> Any:
     """Fetch a named/specific pricelist (e.g. a reseller pricelist)."""
     return _call(_get_client().get_pricelist, {"pricelist": pricelist})
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def get_credit() -> Any:
     """Fetch the current account credit balance."""
     return _call(_get_client().get_credit, {})
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def info_user(user_id: int | None = None) -> Any:
     """Fetch info about the authenticated user, or a specific sub-user by id."""
     params = {"id": user_id} if user_id is not None else {}
     return _call(_get_client().info_user, params)
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def get_dns_zone(domain: str) -> Any:
     """Fetch DNS zone records for a domain hosted on Subreg DNS."""
     return _call(_get_client().get_dns_zone, {"domain": domain})
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def info_contact(contact_id: str) -> Any:
     """Fetch details for a contact object by its Subreg contact id."""
     return _call(_get_client().info_contact, {"id": contact_id})
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def contacts_list() -> Any:
     """List contact objects registered under the authenticated account."""
     return _call(_get_client().contacts_list, {})
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def info_order(order_id: str) -> Any:
     """Fetch the status and details of a previously submitted order."""
     return _call(_get_client().info_order, {"id": order_id})
 
 
-@mcp.tool
+@mcp.tool(annotations=_READ_ONLY)
 def get_tld_info(tld: str) -> Any:
     """Fetch registration rules (min/max period, required fields, ...) for a TLD."""
     return _call(_get_client().get_tld_info, {"tld": tld})
@@ -158,7 +173,7 @@ def get_tld_info(tld: str) -> Any:
 # --------------------------------------------------------------------------
 
 
-@mcp.tool
+@mcp.tool(annotations=_MUTATING)
 def register_domain(
     domain: str,
     registrant_id: str,
@@ -188,21 +203,21 @@ def register_domain(
     )
 
 
-@mcp.tool
+@mcp.tool(annotations=_MUTATING)
 def renew_domain(domain: str, years: int = 1) -> Any:
     """Renew an existing domain for the given number of years. Requires SUBREG_READONLY=false."""
     _require_writable()
     return _call(_get_client().renew_domain, {"domain": domain, "params": {"period": years}})
 
 
-@mcp.tool
+@mcp.tool(annotations=_DESTRUCTIVE)
 def delete_domain(domain: str) -> Any:
     """Delete (cancel) a domain registration. Requires SUBREG_READONLY=false."""
     _require_writable()
     return _call(_get_client().delete_domain, {"domain": domain})
 
 
-@mcp.tool
+@mcp.tool(annotations=_MUTATING)
 def add_dns_record(
     domain: str,
     name: str,
@@ -221,14 +236,14 @@ def add_dns_record(
     return _call(_get_client().add_dns_record, {"domain": domain, "record": record})
 
 
-@mcp.tool
+@mcp.tool(annotations=_DESTRUCTIVE)
 def delete_dns_record(domain: str, record_id: str) -> Any:
     """Delete a DNS record from a zone by its record id. Requires SUBREG_READONLY=false."""
     _require_writable()
     return _call(_get_client().delete_dns_record, {"domain": domain, "record": {"id": record_id}})
 
 
-@mcp.tool
+@mcp.tool(annotations=_MUTATING)
 def create_contact(params: dict[str, Any]) -> Any:
     """Create a new contact object. Requires SUBREG_READONLY=false.
 
@@ -239,7 +254,7 @@ def create_contact(params: dict[str, Any]) -> Any:
     return _call(_get_client().create_contact, params)
 
 
-@mcp.tool
+@mcp.tool(annotations=_MUTATING_IDEMPOTENT)
 def update_contact(contact_id: str, params: dict[str, Any]) -> Any:
     """Update an existing contact object. Requires SUBREG_READONLY=false.
 
@@ -250,7 +265,7 @@ def update_contact(contact_id: str, params: dict[str, Any]) -> Any:
     return _call(_get_client().update_contact, {"id": contact_id, **params})
 
 
-@mcp.tool
+@mcp.tool(annotations=_MUTATING)
 def credit_correction(username: str, amount: int, reason: str) -> Any:
     """Adjust a sub-user's credit balance. Requires SUBREG_READONLY=false.
 
