@@ -35,8 +35,9 @@ class _SubregClient(Commands, Orders):
 
 
 def _readonly() -> bool:
-    return os.environ.get("SUBREG_READONLY", "true") not in ("0", "false", "False", "")
-
+    """Fail-closed: unset or empty → read-only. Only explicit falsey values enable writes."""
+    val = os.environ.get("SUBREG_READONLY", "true").strip().lower()
+    return val not in ("0", "false", "no")
 
 def _require_writable() -> None:
     if _readonly():

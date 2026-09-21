@@ -57,6 +57,12 @@ def test_readonly_by_default(monkeypatch: pytest.MonkeyPatch) -> None:
         delete_domain("example.com")
 
 
+def test_readonly_empty_is_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SUBREG_READONLY", "")
+    with pytest.raises(RuntimeError, match="read-only"):
+        delete_domain("example.com")
+
+
 def test_readonly_guard_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("SUBREG_READONLY", "false")
     monkeypatch.delenv("SUBREG_LOCATION", raising=False)
