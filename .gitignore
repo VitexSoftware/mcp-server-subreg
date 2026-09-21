@@ -5,6 +5,7 @@ build/
 dist/
 .pybuild/
 .pytest_cache/
+.env
 debian/.debhelper/
 debian/mcp-server-subreg/
 debian/debhelper-build-stamp

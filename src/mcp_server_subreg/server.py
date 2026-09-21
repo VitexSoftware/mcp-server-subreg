@@ -132,10 +132,23 @@ def get_credit() -> Any:
 
 
 @mcp.tool(annotations=_READ_ONLY)
-def info_user(user_id: int | None = None) -> Any:
-    """Fetch info about the authenticated user, or a specific sub-user by id."""
-    params = {"id": user_id} if user_id is not None else {}
-    return _call(_get_client().info_user, params)
+def users_list() -> Any:
+    """List sub-users under the authenticated reseller account (Users_List).
+
+    Returns count/users. The logged-in account itself is not a sub-user entry;
+    use get_credit for the current account balance.
+    """
+    return _call(_get_client().users_list)
+
+
+@mcp.tool(annotations=_READ_ONLY)
+def info_user(user_id: int) -> Any:
+    """Fetch details for a reseller sub-user by numeric id (Info_User).
+
+    ``user_id`` is required — Subreg rejects an empty Info_User payload.
+    Discover ids via users_list.
+    """
+    return _call(_get_client().info_user, {"id": user_id})
 
 
 @mcp.tool(annotations=_READ_ONLY)

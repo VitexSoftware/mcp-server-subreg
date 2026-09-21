@@ -19,6 +19,7 @@ def test_tools_are_registered() -> None:
         "pricelist",
         "get_pricelist",
         "get_credit",
+        "users_list",
         "info_user",
         "get_dns_zone",
         "info_contact",
