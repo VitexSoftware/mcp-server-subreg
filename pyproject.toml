@@ -12,7 +12,7 @@ license = { text = "MIT" }
 authors = [{ name = "Vítězslav Dvořák", email = "info@vitexsoftware.cz" }]
 dependencies = [
     "subreg-client @ git+https://github.com/Spoje-NET/python3-subreg-client.git",
-    "fastmcp>=4.0.0a2",
+    "fastmcp>=4.1.4",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",

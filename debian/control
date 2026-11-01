@@ -9,7 +9,7 @@ Build-Depends:
  pybuild-plugin-pyproject,
  python3-all,
  python3-build,
- python3-fastmcp,
+ python3-fastmcp (>= 4.1.4),
  python3-setuptools,
  python3-subreg-client,
  python3-wheel,
@@ -23,7 +23,7 @@ Package: mcp-server-subreg
 Architecture: all
 Multi-Arch: foreign
 Depends:
- python3-fastmcp,
+ python3-fastmcp (>= 4.1.4),
  python3-subreg-client (>= 1.0.0),
  ${misc:Depends},
  ${python3:Depends},
